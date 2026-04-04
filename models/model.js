@@ -39,7 +39,7 @@ const Task = {
             id: tasks.length > 0 ? Math.max(...tasks.map((t) => t.id)) + 1 : 1,
             title: taskData.title,
             description: taskData.description || "",
-            creation: new Date().toLocaleDateString("pt-BR"),
+            created: new Date().toLocaleDateString("pt-BR"),
             modified: new Date()
                 .toLocaleString("pt-BR", {
                     year: "numeric",
