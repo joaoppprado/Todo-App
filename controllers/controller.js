@@ -7,11 +7,21 @@ exports.home = async (req, res) => {
     try {
         const tasks = await Task.getAll();
         const totalTasks = tasks.length;
-        const completedTasks = tasks.filter((tasks) => tasks.status === "concluded").length;
+        // const completedTasks = tasks.filter((task) => task.status === "concluded").length;
 
-        res.render("index", { tasks, totalTasks, completedTasks });
+        res.render("index", { tasks, totalTasks });
     } catch (error) {
         console.error("Failed to get tasks:", error);
         res.status(500).send("Error getting tasks.");
+    }
+};
+
+exports.createTask = async (req, res) => {
+    try {
+        await Task.create(req.body);
+        res.redirect("/");
+    } catch (error) {
+        console.log("Failed to create task:", error);
+        res.status(500).send("Error creating task.");
     }
 };

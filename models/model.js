@@ -1,4 +1,5 @@
 //imports
+const { error } = require("console");
 const fs = require("fs").promises;
 const path = require("path");
 
@@ -8,8 +9,9 @@ const dataPath = path.join(__dirname, "..", "data.json");
 //Funções read and write
 const readData = async () => {
     try {
-        const data = await fs.readFile(dataPath, "utf-8");
-        return JSON.parse(data);
+        const data = await fs.readFile(dataPath, "utf8");
+        const parsed = JSON.parse(data);
+        return Array.isArray(parsed) ? parsed : [parsed];
     } catch (error) {
         if (error.code === "ENOENT") {
             return [];
@@ -20,7 +22,7 @@ const readData = async () => {
 
 const writeData = async (data) => {
     try {
-        await fs.writeFile(dataPath, JSON.stringify(data, null, 2), "utf-8");
+        await fs.writeFile(dataPath, JSON.stringify(data, null, 2), "utf8");
     } catch (error) {
         console.error("Error writing to data.json", error);
         throw error;
@@ -53,7 +55,10 @@ const Task = {
             status: "pending",
             isImportant: taskData.isImportant || false,
         };
-        await writeData(newTask);
+
+        tasks.push(newTask);
+
+        await writeData(tasks);
         return newTask;
     },
 };
