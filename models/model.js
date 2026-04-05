@@ -2,6 +2,7 @@
 const { error } = require("console");
 const fs = require("fs").promises;
 const path = require("path");
+const { title } = require("process");
 
 //json connection
 const dataPath = path.join(__dirname, "..", "data.json");
@@ -61,11 +62,45 @@ const Task = {
         await writeData(tasks);
         return newTask;
     },
-    edit: async (id) => {},
+    edit: async (id, updatedData) => {
+        const tasks = await readData();
+        const taskId = Number(id);
+        const taskIndex = tasks.findIndex((task) => task.id === taskId);
+
+        // VALIDAÇÃO: Se a tarefa não for encontrada, taskIndex será -1.
+        if (taskIndex === -1) {
+            throw new Error(`Task with ID ${id} not found.`);
+        }
+
+        const originalTask = tasks[taskIndex];
+        const updatedTask = {
+            ...originalTask,
+            title: updatedData.title || originalTask.title,
+            description: updatedData.description || originalTask.description,
+            modified: new Date()
+                .toLocaleString("pt-BR", {
+                    year: "numeric",
+                    month: "short",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                })
+                .replace(/ de /g, ", ")
+                .replace(".", ""),
+        };
+        tasks[taskIndex] = updatedTask;
+        await writeData(tasks);
+        return updatedTask;
+    },
     delete: async (id) => {
         const tasks = await readData();
         const taskId = Number(id);
         const updatedTasks = tasks.filter((task) => task.id !== taskId);
+
+        // VALIDAÇÃO: Se o array não diminuiu, a tarefa não foi encontrada.
+        if (tasks.length === updatedTasks.length) {
+            throw new Error(`Task with ID ${id} not found.`);
+        }
         await writeData(updatedTasks);
     },
 };
