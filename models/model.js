@@ -61,6 +61,13 @@ const Task = {
         await writeData(tasks);
         return newTask;
     },
+    edit: async (id) => {},
+    delete: async (id) => {
+        const tasks = await readData();
+        const taskId = Number(id);
+        const updatedTasks = tasks.filter((task) => task.id !== taskId);
+        await writeData(updatedTasks);
+    },
 };
 
 module.exports = Task;
