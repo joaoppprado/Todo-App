@@ -25,3 +25,13 @@ exports.createTask = async (req, res) => {
         res.status(500).send("Error creating task.");
     }
 };
+
+exports.deleteTask = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Task.delete(id);
+        res.sendStatus(204);
+    } catch (error) {
+        console.error("Failed to delete task:", error);
+    }
+};
