@@ -7,9 +7,9 @@ exports.home = async (req, res) => {
     try {
         const tasks = await Task.getAll();
         const totalTasks = tasks.length;
-        // const completedTasks = tasks.filter((task) => task.status === "concluded").length;
+        const completedTasks = tasks.filter((task) => task.status === "concluded").length;
 
-        res.render("index", { tasks, totalTasks });
+        res.render("index", { tasks, totalTasks, completedTasks });
     } catch (error) {
         console.error("Failed to get tasks:", error);
         res.status(500).send("Error getting tasks.");
@@ -45,5 +45,16 @@ exports.deleteTask = async (req, res) => {
     } catch (error) {
         console.error("Failed to delete task:", error);
         res.status(500).json({ message: "Error deleting task" });
+    }
+};
+
+exports.updateStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updatedTask = await Task.updateStatus(id);
+        res.status(200).json(updatedTask);
+    } catch (error) {
+        console.error("Failed to update task status:", error);
+        res.status(500).json({ message: "Error updating task status" });
     }
 };

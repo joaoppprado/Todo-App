@@ -57,7 +57,7 @@ const Task = {
             isImportant: taskData.isImportant || false,
         };
 
-        tasks.push(newTask);
+        tasks.unshift(newTask);
 
         await writeData(tasks);
         return newTask;
@@ -102,6 +102,42 @@ const Task = {
             throw new Error(`Task with ID ${id} not found.`);
         }
         await writeData(updatedTasks);
+    },
+    updateStatus: async (id) => {
+        const tasks = await readData();
+        const taskId = Number(id);
+        const taskIndex = tasks.findIndex((task) => task.id === taskId);
+
+        if (taskIndex === -1) {
+            throw new Error(`Task with ID ${id} not found.`);
+        }
+
+        const statusCycle = {
+            pending: "in progress",
+            "in progress": "concluded",
+            concluded: "pending",
+        };
+
+        const currentTask = tasks[taskIndex];
+        const nextStatus = statusCycle[currentTask.status] || "pending";
+
+        tasks[taskIndex] = {
+            ...currentTask,
+            status: nextStatus,
+            modified: new Date()
+                .toLocaleString("pt-BR", {
+                    year: "numeric",
+                    month: "short",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                })
+                .replace(/ de /g, ", ")
+                .replace(".", ""),
+        };
+
+        await writeData(tasks);
+        return tasks[taskIndex];
     },
 };
 
