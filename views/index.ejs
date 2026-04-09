@@ -46,13 +46,7 @@
                           statusIcon = '<svg width="22" height="22" viewBox="0 0 24 24" fill="#10b981" xmlns="http://www.w3.org/2000/svg"> <circle cx="12" cy="12" r="10" /> <path d="M8 12L11 15L16 9" stroke="#1a1a20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /> </svg>';
                        }
                     %>
-        <% let priorityClass = '';
-                       if(task.isImportant && task.status === "pending"){
-                        priorityClass = 'task--high-priority';
-                       } else {
-                        priorityClass = '';
-                       }
-                       %>
+        <% const priorityClass = (task.isImportant && task.status === "pending") ? 'task--high-priority' : ''; %>
         <li class="task <%= statusClass %> <%= priorityClass %>" data-id="<%= task.id %>">
           <div class="task__view">
             <div class="task__status-indicator">
