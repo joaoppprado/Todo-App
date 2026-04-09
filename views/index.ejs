@@ -46,7 +46,14 @@
                           statusIcon = '<svg width="22" height="22" viewBox="0 0 24 24" fill="#10b981" xmlns="http://www.w3.org/2000/svg"> <circle cx="12" cy="12" r="10" /> <path d="M8 12L11 15L16 9" stroke="#1a1a20" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /> </svg>';
                        }
                     %>
-        <li class="task <%= statusClass %>" data-id="<%= task.id %>">
+        <% let priorityClass = '';
+                       if(task.isImportant && task.status === "pending"){
+                        priorityClass = 'task--high-priority';
+                       } else {
+                        priorityClass = '';
+                       }
+                       %>
+        <li class="task <%= statusClass %> <%= priorityClass %>" data-id="<%= task.id %>">
           <div class="task__view">
             <div class="task__status-indicator">
               <%- statusIcon %>
@@ -61,6 +68,7 @@
                 <span class="task__badge">Modified: <%= task.modified %></span>
                 <span class="task__status-text">
                   <%= task.status %>
+                  <%= task.isImportant ? " - Important" : ""; %>
                 </span>
               </div>
             </div>
