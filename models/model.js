@@ -139,6 +139,24 @@ const Task = {
         await writeData(tasks);
         return tasks[taskIndex];
     },
+    updatePriority: async (id) => {
+        const tasks = await readData();
+        const taskId = Number(id);
+        const taskIndex = tasks.findIndex((task) => task.id === taskId);
+
+        if (taskIndex === -1) {
+            throw new Error(`Task with ID ${id} not found.`);
+        }
+
+        const currentTask = tasks[taskIndex];
+        tasks[taskIndex] = {
+            ...currentTask,
+            isImportant: !currentTask.isImportant,
+        };
+
+        await writeData(tasks);
+        return tasks[taskIndex];
+    },
 };
 
 module.exports = Task;

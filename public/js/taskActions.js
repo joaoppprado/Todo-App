@@ -65,4 +65,20 @@ document.addEventListener("click", async (e) => {
             }
         }
     }
+    if (action === "priority") {
+        try {
+            const response = await fetch(`/updatePriority/${id}`, {
+                method: "PATCH",
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to update task priority");
+            }
+
+            window.location.reload();
+        } catch (error) {
+            console.error("Error updating task priority:", error);
+            alert("Não foi possível atualizar a prioridade da tarefa.");
+        }
+    }
 });

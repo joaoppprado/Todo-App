@@ -58,3 +58,14 @@ exports.updateStatus = async (req, res) => {
         res.status(500).json({ message: "Error updating task status" });
     }
 };
+
+exports.updatePriority = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updatedTask = await Task.updatePriority(id);
+        res.status(200).json(updatedTask);
+    } catch (error) {
+        console.error("Failed to update task priority:", error);
+        res.status(500).json({ message: "Error updating task priority" });
+    }
+};
